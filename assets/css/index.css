@@ -74,6 +74,10 @@
   background-color: #f1ece6;
 }
 
+.modal__add-input:focus {
+  outline: none;
+}
+
 .modal__add-button {
   display: flex;
   width: 140px;
@@ -85,6 +89,69 @@
   font-size: 38px;
 }
 
+.modal__todo {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  width: 1040px;
+  height: 589px;
+  border-radius: 50px;
+  background-color: #f1ece6;
+  margin-left: 200px;
+  margin-top: 40px;
+}
+
+.modal__todo-item {
+  display: flex;
+  width: 946px;
+  height: 88px;
+  align-items: center;
+}
+
+.modal__todo-item-content {
+  display: flex;
+  font-weight: 400;
+  font-size: 32px;
+  align-items: center;
+  padding-top: 10px;
+  padding-left: 5px;
+  position: relative;
+}
+
+.modal__todo-item-content::after {
+  content: '';
+  width: 868px;
+  height: 1px;
+  background-color: #76b7cd;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.modal__todo-check-img {
+  width: 64px;
+  height: 64px;
+  margin-top: 12px;
+}
+
+.modal__todo-delete-img {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+}
+
+.modal__todo-clear-img {
+  width: 276px;
+  height: 76px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 75px;
+}
+
 .border-bottom {
   border-bottom-style: solid;
   border-bottom-width: 5px;
@@ -93,4 +160,9 @@
 
 .unselected-color {
   color: #969696;
+}
+
+.checked-task {
+  color: #c2c2c2;
+  text-decoration: line-through;
 }
