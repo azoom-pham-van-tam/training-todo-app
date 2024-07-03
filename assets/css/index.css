@@ -53,6 +53,17 @@
   font-size: 32px;
   font-style: normal;
   padding-top: 20px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: #969696;
+  border-bottom: 5px solid transparent;
+  transition: opacity 0.7s ease;
+}
+
+.modal__navigation-button:hover {
+  color: black;
+  /* border-bottom: 5px solid #d98326; */
 }
 
 .modal__add {
@@ -87,6 +98,8 @@
   justify-content: center;
   align-items: center;
   font-size: 38px;
+  border: none;
+  cursor: pointer;
 }
 
 .modal__todo {
@@ -130,39 +143,52 @@
   transform: translateX(-50%);
 }
 
-.modal__todo-check-img {
+.modal__todo-check-button {
   width: 64px;
   height: 64px;
   margin-top: 12px;
+  border: none;
+  background-color: transparent;
 }
 
-.modal__todo-delete-img {
+.modal__todo-delete-button {
   display: flex;
   width: 32px;
   height: 32px;
   align-items: center;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
 }
 
-.modal__todo-clear-img {
+.modal__todo-clear-button{
   width: 276px;
   height: 76px;
   position: absolute;
   bottom: 0;
   right: 0;
   margin-right: 75px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
-.border-bottom {
-  border-bottom-style: solid;
-  border-bottom-width: 5px;
-  border-bottom-color: #d98326;
-}
-
-.unselected-color {
-  color: #969696;
+.selected {
+  border-bottom: 5px solid #d98326;
+  color: black;
 }
 
 .checked-task {
   color: #c2c2c2;
   text-decoration: line-through;
+}
+
+.disable {
+  background-color: #cdcdcd;
+  cursor: not-allowed;
+}
+
+.modal__add-button:not(.disable):hover {
+  cursor: pointer;
+  background-color:  #66cccc;
 }
