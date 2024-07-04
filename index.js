@@ -4,7 +4,7 @@ const PATH = {
   deleteImagePath: './assets/img/Delete-Outline.png',
   todoListContentPath: '.modal__content .modal__todo',
   navigationTabPath: '.modal__navigation button',
-  clearAllImagePath: '"./assets/img/Clear-Complete.png"'
+  clearAllImagePath: './assets/img/Clear-Complete.png'
 }
 
 const TASKS_TAB_BUTTON_ID = {
@@ -13,7 +13,7 @@ const TASKS_TAB_BUTTON_ID = {
 }
 
 const TODO_LIST_DATA = {
-  personalTodoList: [
+  'personal-tab': [
     {
       id: 1,
       content: 'Personal Work No. 1',
@@ -40,7 +40,7 @@ const TODO_LIST_DATA = {
       completed: false
     }
   ],
-  professionalTodoList: [
+  'professional-tab': [
     {
       id: 1,
       content: 'Professional Work No. 1',
@@ -75,24 +75,12 @@ getTodoListContent(currentTabId)
 function getTodoListContent(tabId) {
   let todoListContent = document.querySelector(PATH.todoListContentPath)
   let todoListItems = ''
-  if (tabId === TASKS_TAB_BUTTON_ID.personal) {
-    TODO_LIST_DATA.personalTodoList.forEach(personalTodo => {
-      todoListItems += setContentForTodoItem({
-        itemId: personalTodo.id,
-        completed: personalTodo.completed,
-        content: personalTodo.content
-      })
-    })
 
-    todoListItems += setClearButtonForTodoContent(tabId)
-    todoListContent.innerHTML = todoListItems
-    return
-  }
-  TODO_LIST_DATA.professionalTodoList.forEach(professionalTodo => {
+  TODO_LIST_DATA[tabId].forEach(todo => {
     todoListItems += setContentForTodoItem({
-      itemId: professionalTodo.id,
-      completed: professionalTodo.completed,
-      content: professionalTodo.content
+      itemId: todo.id,
+      completed: todo.completed,
+      content: todo.content
     })
   })
   todoListItems += setClearButtonForTodoContent(tabId)
@@ -111,6 +99,7 @@ function selectTab(tabId) {
   currentTab.classList.add('selected')
   currentTabId = tabId
   getTodoListContent(tabId)
+  return
 }
 
 function toggleCheckbox(checkboxImageId, contentId) {
@@ -124,20 +113,13 @@ function toggleCheckbox(checkboxImageId, contentId) {
     updateTaskContent(contentId, true)
     getTodoListContent(currentTabId)
   }
+  return
 }
 
 function updateTaskContent(contentId, status) {
-  if (currentTabId === TASKS_TAB_BUTTON_ID.personal) {
-    return TODO_LIST_DATA.personalTodoList.forEach(personalTodo => {
-      if (personalTodo.id === contentId) {
-        personalTodo.completed = status
-      }
-    })
-  }
-
-  return TODO_LIST_DATA.professionalTodoList.forEach(professionalTodo => {
-    if (professionalTodo.id === contentId) {
-      professionalTodo.completed = status
+  return TODO_LIST_DATA[currentTabId].forEach(todo => {
+    if (todo.id === contentId) {
+      todo.completed = status
     }
   })
 }
@@ -146,42 +128,20 @@ function removeTodoItem(itemId) {
   const item = getItemDetail(itemId)
   const confirmMessage = `${item.content} will be deleted. Are you sure?`
   const isConfirmed = confirm(confirmMessage)
-
   if (!isConfirmed) {
     return
   }
-
-  const { personalTodoList, professionalTodoList } = TODO_LIST_DATA
-  if (currentTabId === TASKS_TAB_BUTTON_ID.personal) {
-    const index = personalTodoList.findIndex(
-      personalTodo => personalTodo.id === itemId
-    )
-    personalTodoList.splice(index, 1)
-    getTodoListContent(currentTabId)
-    return
-  }
-
-  const index = professionalTodoList.findIndex(
-    professionalTodo => professionalTodo.id === itemId
-  )
-  professionalTodoList.splice(index, 1)
+  const todoList = TODO_LIST_DATA[currentTabId]
+  const index = todoList.findIndex(todo => todo.id === itemId)
+  todoList.splice(index, 1)
   getTodoListContent(currentTabId)
   return
 }
 
 function removeAllTodoItems(tabId) {
-  if (tabId === TASKS_TAB_BUTTON_ID.personal) {
-    TODO_LIST_DATA.personalTodoList = TODO_LIST_DATA.personalTodoList.filter(
-      personalTodo => personalTodo.completed !== true
-    )
-    getTodoListContent(tabId)
-    return
-  }
-
-  TODO_LIST_DATA.professionalTodoList =
-    TODO_LIST_DATA.professionalTodoList.filter(
-      professional => professional.completed !== true
-    )
+  TODO_LIST_DATA[tabId] = TODO_LIST_DATA[tabId].filter(
+    todo => todo.completed !== true
+  )
   getTodoListContent(tabId)
   return
 }
@@ -203,13 +163,8 @@ function setContentForTodoItem({ itemId, completed, content }) {
 }
 
 function getItemDetail(itemId) {
-  const { personalTodoList, professionalTodoList } = TODO_LIST_DATA
-  if (currentTabId === TASKS_TAB_BUTTON_ID.personal) {
-    return personalTodoList.find(personalTodo => personalTodo.id === itemId)
-  }
-  return professionalTodoList.find(
-    professionalTodo => professionalTodo.id === itemId
-  )
+  const todoList = TODO_LIST_DATA[currentTabId]
+  return todoList.find(todo => todo.id === itemId)
 }
 
 function setClearButtonForTodoContent(currentTabId) {
@@ -218,12 +173,12 @@ function setClearButtonForTodoContent(currentTabId) {
 
 function validateInput(inputContent) {
   const addButton = document.querySelector('.modal__add-button')
-  console.log('call validateINput')
   if (!inputContent.trim()) {
     addButton.classList.add('disable')
   } else {
     addButton.classList.remove('disable')
   }
+  return
 }
 
 function addToDoItem() {
@@ -234,53 +189,18 @@ function addToDoItem() {
     return
   }
 
-  if (currentTabId === TASKS_TAB_BUTTON_ID.personal) {
-    const personalTodoList = TODO_LIST_DATA.personalTodoList
-    if (
-      personalTodoList.some(
-        personalTodo => personalTodo.content === inputContentTrimmed
-      )
-    ) {
-      return
-    }
-
-    const personalTodoIdMax = personalTodoList.length
-      ? personalTodoList.reduce(
-          (max, personalTodo) =>
-            personalTodo.id > max ? personalTodo.id : max,
-          personalTodoList[0].id
-        )
-      : 0
-    const newId = personalTodoIdMax + 1
-    personalTodoList.push({
-      id: newId,
-      content: inputContentTrimmed,
-      completed: false
-    })
-    inputContent.value = ''
-    validateInput(inputContent.value)
-    getTodoListContent(currentTabId)
+  const todoList = TODO_LIST_DATA[currentTabId]
+  if (todoList.some(todo => todo.content === inputContentTrimmed)) {
     return
   }
-
-  const professionalTodoList = TODO_LIST_DATA.professionalTodoList
-  if (
-    professionalTodoList.some(
-      professionalTodo => professionalTodo.content === inputContentTrimmed
-    )
-  ) {
-    return
-  }
-
-  const professionalTodoIdMax = professionalTodoList.length
-    ? professionalTodoList.reduce(
-        (max, professionalTodo) =>
-          professionalTodo.id > max ? professionalTodo.id : max,
-        professionalTodoList[0].id
+  const todoIdMax = todoList.length
+    ? todoList.reduce(
+        (max, todo) => (todo.id > max ? todo.id : max),
+        todoList[0].id
       )
     : 0
-  const newId = professionalTodoIdMax + 1
-  professionalTodoList.push({
+  const newId = todoIdMax + 1
+  todoList.push({
     id: newId,
     content: inputContentTrimmed,
     completed: false
